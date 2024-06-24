@@ -1,242 +1,274 @@
-<?php
 
-/*
- *---------------------------------------------------------------
- * APPLICATION ENVIRONMENT
- *---------------------------------------------------------------
- *
- * You can load different configurations depending on your
- * current environment. Setting the environment also influences
- * things like logging and error reporting.
- *
- * This can be set to anything, but default usage is:
- *
- *     development
- *     testing
- *     production
- *
- * NOTE: If you change these, also change the error_reporting() code below
- *
- */
+<!DOCTYPE html>
+<html lang="ja">
+<head prefix="og: http://ogp.me/ns#">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>ポケモン全部言えるかな？ゲーム</title>
+    <meta name="description" content="キミは全ポケモン1025匹言えるかな？全ポケモン1025匹を答えるタイムアタッククイズゲームにチャレンジしよう！">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ポケモン全部言えるかな？ゲーム">
+    <meta name="twitter:description" content="キミは全ポケモン1025匹言えるかな？全ポケモン1025匹を答えるタイムアタッククイズゲームにチャレンジしよう！">
+    <meta name="twitter:image" content="https://all-pokemon-ierukana.com/img/system/tweet_all.png">
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="ポケモン全部言えるかな？ゲーム" />
+    <meta property="og:description" content="キミは全ポケモン1025匹言えるかな？全ポケモン1025匹を答えるタイムアタッククイズゲームにチャレンジしよう！" />
+    <meta property="og:image" content="https://all-pokemon-ierukana.com/img/system/tweet_all.png" />
+    <meta property='og:site_name' content='ポケモン全部言えるかな？ゲーム' /><meta property='og:locale' content='ja_JP'>    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="style.css?20240624140039" rel="stylesheet">
+    <link rel="icon" href="/img/system/favicon.ico">
+        <link rel="alternate" hreflang="ja" href="https://all-pokemon-ierukana.com/>">
+    <link rel="alternate" hreflang="en" href="https://all-pokemon-ierukana.com/?lang=en-us>">
+    <!-- / -->
+    <!-- Google Tag Manager -->
+    <script>
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-5QG7HRH');
+    </script>
+    <!-- End Google Tag Manager -->
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <script>
+        var gen = "all";
+        var number_start = 1;
+        var number_pokemons = 1025;
+        var lang = "ja";
+    </script>
+    <script defer src="script.js?20240624140039"></script>
+</head>
+<body class="px-2 pb-2 px-sm-4 px-lg-5 gen-all">
+    
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5QG7HRH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<header class="none_onfocus">
+    <div class="d-flex justify-content-end">
+        <div class="dropdown">
+            <div class="dropdown-wrapper bgcolor_white_alpha border rounded">
+                <button class="btn dropdown-toggle btn-sm xx-small-sp" type="button" id="dropdownLanguageButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    Language
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownLanguageButton">
+                    <li><a class="dropdown-item navi" href="/index.php">日本語</a></li>
+                    <li><a class="dropdown-item navi" href="/index.php?lang=en-us">English</a></li>
+                </ul>
+            </div>
+        </div>
 
-/**
- * url floating
- */
-if ($_SERVER['SERVER_NAME'] !== 'localhost' && strpos($_SERVER['SERVER_NAME'], '192.168.1.') === FALSE) {
-    if($_SERVER['REQUEST_URI'] != "/" && substr($_SERVER['REQUEST_URI'],-1) == '/'){
-        header("Location: https://ierukana.elzup.com".substr($_SERVER['REQUEST_URI'],0,-1), TRUE, 301);
-        exit;
-    }
-    if(substr($_SERVER['SERVER_NAME'],0,3) == "www"){
-        header("Location: https://ierukana.elzup.com".$_SERVER['REQUEST_URI'], TRUE, 301);
-        exit;
-    }
-    if(substr($_SERVER['REQUEST_URI'],-10) == "index.html"){
-        header("Location: https://ierukana.elzup.com".substr($_SERVER['REQUEST_URI'],0,-11), TRUE, 301);
-        exit;
-    }
-    if(substr($_SERVER['REQUEST_URI'],-9) == "index.php"){
-        header("Location: https://ierukana.elzup.com".substr($_SERVER['REQUEST_URI'],0,-10), TRUE, 301);
-        exit;
-    }
-}
-
-$home_path = '../';
-
-define ('ENVIRONMENT_DEVELOPMENT', 'development');
-define ('ENVIRONMENT_TESTING', 'testing');
-define ('ENVIRONMENT_PRODUCTION', 'production');
-
-if (file_exists('env_pro')) {
-    define('ENVIRONMENT', ENVIRONMENT_PRODUCTION);
-} else {
-    define('ENVIRONMENT', ENVIRONMENT_DEVELOPMENT);
-}
-/*
- *---------------------------------------------------------------
- * ERROR REPORTING
- *---------------------------------------------------------------
- *
- * Different environments will require different levels of error reporting.
- * By default development will show errors but testing and live will hide them.
- */
-
-if (defined('ENVIRONMENT'))
-{
-	switch (ENVIRONMENT)
-	{
-		case ENVIRONMENT_DEVELOPMENT:
-			error_reporting(E_ALL);
-		break;
-	
-		case ENVIRONMENT_TESTING:
-        case ENVIRONMENT_PRODUCTION:
-            if (file_exists('debug')) {
-                error_reporting(E_ALL);
-            } else {
-                error_reporting(0);
-            }
-		break;
-
-		default:
-			exit('The application environment is not set correctly.');
-	}
-}
-
-/*
- *---------------------------------------------------------------
- * SYSTEM FOLDER NAME
- *---------------------------------------------------------------
- *
- * This variable must contain the name of your "system" folder.
- * Include the path if the folder is not in the same  directory
- * as this file.
- *
- */
-	$system_path = $home_path . 'system';
-
-/*
- *---------------------------------------------------------------
- * APPLICATION FOLDER NAME
- *---------------------------------------------------------------
- *
- * If you want this front controller to use a different "application"
- * folder then the default one you can set its name here. The folder
- * can also be renamed or relocated anywhere on your server.  If
- * you do, use a full server path. For more info please see the user guide:
- * http://codeigniter.com/user_guide/general/managing_apps.html
- *
- * NO TRAILING SLASH!
- *
- */
-	$application_folder = $home_path . 'application';
-
-/*
- * --------------------------------------------------------------------
- * DEFAULT CONTROLLER
- * --------------------------------------------------------------------
- *
- * Normally you will set your default controller in the routes.php file.
- * You can, however, force a custom routing by hard-coding a
- * specific controller class/function here.  For most applications, you
- * WILL NOT set your routing here, but it's an option for those
- * special instances where you might want to override the standard
- * routing in a specific front controller that shares a common CI installation.
- *
- * IMPORTANT:  If you set the routing here, NO OTHER controller will be
- * callable. In essence, this preference limits your application to ONE
- * specific controller.  Leave the function name blank if you need
- * to call functions dynamically via the URI.
- *
- * Un-comment the $routing array below to use this feature
- *
- */
-	// The directory name, relative to the "controllers" folder.  Leave blank
-	// if your controller is not in a sub-folder within the "controllers" folder
-	// $routing['directory'] = '';
-
-	// The controller class file name.  Example:  Mycontroller
-	// $routing['controller'] = '';
-
-	// The controller function you wish to be called.
-	// $routing['function']	= '';
-
-
-/*
- * -------------------------------------------------------------------
- *  CUSTOM CONFIG VALUES
- * -------------------------------------------------------------------
- *
- * The $assign_to_config array below will be passed dynamically to the
- * config class when initialized. This allows you to set custom config
- * items or override any default config values found in the config.php file.
- * This can be handy as it permits you to share one application between
- * multiple front controller files, with each file containing different
- * config values.
- *
- * Un-comment the $assign_to_config array below to use this feature
- *
- */
-	// $assign_to_config['name_of_config_item'] = 'value of config item';
-
-
-
-// --------------------------------------------------------------------
-// END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE
-// --------------------------------------------------------------------
-
-/*
- * ---------------------------------------------------------------
- *  Resolve the system path for increased reliability
- * ---------------------------------------------------------------
- */
-
-	// Set the current directory correctly for CLI requests
-	if (defined('STDIN'))
-	{
-		chdir(dirname(__FILE__));
-	}
-
-	if (realpath($system_path) !== FALSE)
-	{
-		$system_path = realpath($system_path).'/';
-	}
-
-	// ensure there's a trailing slash
-	$system_path = rtrim($system_path, '/').'/';
-
-	// Is the system path correct?
-	if ( ! is_dir($system_path))
-	{
-		exit("Your system folder path does not appear to be set correctly. Please open the following file and correct this: ".pathinfo(__FILE__, PATHINFO_BASENAME));
-	}
-
-/*
- * -------------------------------------------------------------------
- *  Now that we know the path, set the main path constants
- * -------------------------------------------------------------------
- */
-	// The name of THIS file
-	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
-
-	// The PHP file extension
-	// this global constant is deprecated.
-	define('EXT', '.php');
-
-	// Path to the system folder
-	define('BASEPATH', str_replace("\\", "/", $system_path));
-
-	// Path to the front controller (this file)
-	define('FCPATH', str_replace(SELF, '', __FILE__));
-
-	// Name of the "system folder"
-	define('SYSDIR', trim(strrchr(trim(BASEPATH, '/'), '/'), '/'));
-
-
-	// The path to the "application" folder
-	if (is_dir($application_folder))
-	{
-		define('APPPATH', $application_folder.'/');
-	}
-	else
-	{
-		if ( ! is_dir(BASEPATH.$application_folder.'/'))
-		{
-			exit("Your application folder path does not appear to be set correctly. Please open the following file and correct this: ".SELF);
-		}
-
-		define('APPPATH', BASEPATH.$application_folder.'/');
-	}
-
-/*
- * --------------------------------------------------------------------
- * LOAD THE BOOTSTRAP FILE
- * --------------------------------------------------------------------
- *
- * And away we go...
- *
- */
-require_once BASEPATH.'core/CodeIgniter.php';
-
-/* End of file index.php */
-/* Location: ./index.php */
+        <!-- <div class="container mb-1 border rounded pc_only bgcolor_white_alpha">
+                <div class="row rounded">
+                    <div class="col text-center p-0">
+                        <a class="navi" href="gen01">カントー</a>
+                    </div>
+                    <div class="col text-center p-0">
+                        <a class="navi" href="gen02">ジョウト</a>
+                    </div>
+                    <div class="col text-center p-0">
+                        <a class="navi" href="gen03">ホウエン</a>
+                    </div>
+                    <div class="col text-center p-0">
+                        <a class="navi" href="gen04">シンオウ</a>
+                    </div>
+                    <div class="col text-center p-0">
+                        <a class="navi" href="gen05">イッシュ</a>
+                    </div>
+                    <div class="col text-center p-0">
+                        <a class="navi" href="gen06">カロス</a>
+                    </div>
+                    <div class="col text-center p-0">
+                        <a class="navi" href="gen07">アローラ・GO</a>
+                    </div>
+                    <div class="col text-center p-0">
+                        <a class="navi" href="gen08">ガラル・ヒスイ</a>
+                    </div>
+                    <div class="col text-center p-0">
+                        <a class="navi" href="gen09">パルデア</a>
+                    </div>
+                    <div class="col text-center p-0">
+                        <a class="navi" href="/">全部</a>
+                    </div>
+                    <div class="col text-center p-0">
+                        <a class="navi note" href="challengemode">むずかし版</a>
+                    </div>
+                </div>
+            </div> -->
+        <div class="dropdown">
+            <div class="dropdown-wrapper bgcolor_white_alpha ms-1 border rounded" lang="ja">
+                <button class="btn dropdown-toggle btn-sm xx-small-sp" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    他の地方                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item navi" href="gen01?lang=ja">カントー</a></li>
+                    <li><a class="dropdown-item navi" href="gen02?lang=ja">ジョウト</a></li>
+                    <li><a class="dropdown-item navi" href="gen03?lang=ja">ホウエン</a></li>
+                    <li><a class="dropdown-item navi" href="gen04?lang=ja">シンオウ</a></li>
+                    <li><a class="dropdown-item navi" href="gen05?lang=ja">イッシュ</a></li>
+                    <li><a class="dropdown-item navi" href="gen06?lang=ja">カロス</a></li>
+                    <li><a class="dropdown-item navi" href="gen07?lang=ja">アローラ・GO</a></li>
+                    <li><a class="dropdown-item navi" href="gen08?lang=ja">ガラル・ヒスイ</a></li>
+                    <li><a class="dropdown-item navi" href="gen09?lang=ja">パルデア</a></li>
+                    <li><a class="dropdown-item navi" href="/?lang=ja">全部</a></li>
+                    <li><a class="dropdown-item navi" href="challengemode?lang=ja">むずかし版</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>    <main>
+        <div id="others">
+            <div class="modal fade" id="confirm_modal" tabindex="-1" aria-labelledby="confirm_modal_label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>勝負を　あきらめて<br>降参しますか？</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="button_confirm" class="btn btn-primary btn-sm" data-bs-target="#surrender_modal" data-bs-toggle="modal" data-bs-dismiss="modal">はい</button>
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">いいえ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="surrender_modal" tabindex="-1" aria-labelledby="surrender_modal_label" data-bs-backdrop="static" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-target="#ad_modal" data-bs-toggle="modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                キミは<span id='surrender_time'></span>で<br>ポケモン <span id='num_answers'></span> / 1025 匹言えたよ！                            </p>
+                            <p class="small">
+                                降参した<span id='num_surrender_players'>[通信待機中…]</span>人の平均解答数：<span id='average_num_answers'>[通信待機中…]</span> / 1025 匹                            </p>
+                            <p id="message_best_num_answers"></p>
+                        </div>
+                        <div class="modal-footer dropup">
+                            <button class="dropdown_sns btn dropdown-toggle btn-sm text-white" type="button" id="dropdownMenuSnsShareSurrenderModal" data-bs-toggle="dropdown" aria-expanded="false">
+                                結果をSNSにシェア                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuSnsShareSurrenderModal">
+                                <li class="mb-1"><a rel="nofollow" role="button" class="button_tweet btn btn-sm text-white" onclick="openTweetWindow();"><img src="/img/system/logo_X.png" class="sns_logo"> 結果をX(Twitter)にシェア</a></li>
+                                <li class="mb-1"><a rel="nofollow" role="button" class="button_facebook btn btn-sm text-white" onclick="copyResultText('openFacebook()');"><img src="/img/system/logo_facebook.png" class="sns_logo"> 結果をコピーしてFacebookにシェア</a></li>
+                                <li class="mb-1"><a rel="nofollow" role="button" class="button_line btn btn-sm text-white" onclick="copyResultText('openLine()');"><img src="/img/system/logo_line.png" class="sns_logo"> 結果をコピーしてLINEにシェア</a></li>
+                                <li class="mb-1"><a rel="nofollow" role="button" class="button_instagram btn btn-sm text-white" onclick="copyResultText('openInstagram()');"><img src="/img/system/logo_instagram.png" class="sns_logo"> 結果をコピーしてInstagramにシェア</a></li>
+                            </ul>
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-target="#ad_modal" data-bs-toggle="modal" data-bs-dismiss="modal">閉じる</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="clear_modal" tabindex="-1" aria-labelledby="clear_modal_label" data-bs-backdrop="static" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-target="#ad_modal" data-bs-toggle="modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>クリアおめでとう！<br>キミはまさしく全ポケモンマスターだ！</p>                            <p class="small">キミのクリアタイム：<span id="clear_time"></span><br>
+                                クリアした<span id='num_clear_players'>[通信待機中…]</span>人の平均タイム：<span id='average_time'>[通信待機中…]</span>                            </p>
+                            <p id="message_ranking"></p>
+                        </div>
+                        <div class="modal-footer dropup">
+                            <button class="dropdown_sns btn dropdown-toggle btn-sm text-white" type="button" id="dropdownMenuSnsShareClearModal" data-bs-toggle="dropdown" aria-expanded="false">
+                                結果をSNSにシェア                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuSnsShareClearModal">
+                                <li class="mb-1"><a rel="nofollow" role="button" class="button_tweet btn btn-sm text-white" onclick="openTweetWindow();"><img src="/img/system/logo_X.png" class="sns_logo"> 結果をX(Twitter)にシェア</a></li>
+                                <li class="mb-1"><a rel="nofollow" role="button" class="button_facebook btn btn-sm text-white" onclick="copyResultText('openFacebook()');"><img src="/img/system/logo_facebook.png" class="sns_logo"> 結果をコピーしてFacebookにシェア</a></li>
+                                <li class="mb-1"><a rel="nofollow" role="button" class="button_line btn btn-sm text-white" onclick="copyResultText('openLine()');"><img src="/img/system/logo_line.png" class="sns_logo"> 結果をコピーしてLINEにシェア</a></li>
+                                <li class="mb-1"><a rel="nofollow" role="button" class="button_instagram btn btn-sm text-white" onclick="copyResultText('openInstagram()');"><img src="/img/system/logo_instagram.png" class="sns_logo"> 結果をコピーしてInstagramにシェア</a></li>
+                            </ul>
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-target="#ad_modal" data-bs-toggle="modal" data-bs-dismiss="modal">閉じる</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="ad_modal" tabindex="-1" aria-labelledby="ad_modal_label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            広告<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="ad_modal_a8" class="text-center">
+                            <a href="https://px.a8.net/svt/ejp?a8mat=3TFE2B+987X3U+348+6NETT" rel="nofollow">
+<img border="0" width="300" height="250" alt="" src="https://www20.a8.net/svt/bgt?aid=230825459558&wid=002&eno=01&mid=s00000000404001117000&mc=1"></a>
+<img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=3TFE2B+987X3U+348+6NETT" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h1 id="h1" class="mb-0 text-center h2 none_onfocus" lang="ja">
+                全ポケモン1025匹言えるかな？            </h1>
+            <p class="text-center small mb-0 none_onfocus"></p>
+            <div class="container mb-2 rounded">
+                <div class="row rounded justify-content-center">
+                    <div class="col-6 col-lg-3 border rounded text-center bgcolor_white_alpha fit-content">
+                        <p id="timer" class="h4 mb-0">000:00:00</p>
+                    </div>
+                    <div class="col-6 col-lg-3 border rounded text-center bgcolor_white_alpha fit-content">
+                        <p id="progress" class="xx-small mb-0">現在<span id='span_number_answered' class='h4'>???</span>匹 残り<span id='span_remaining_number' class='h4'>???</span>匹</p>
+                    </div>
+                    <div class="col-auto">
+                        <form name="form_answer" id="form_answer" autocomplete="off">
+                            <div class="row">
+                                <div class="col-auto px-1">
+                                    <input type="text" id="input_answer" placeholder="開始してね" class="form-control-sm xx-small-sp" disabled lang="ja">
+                                </div>
+                                <div class="col-auto ps-0 pe-1">
+                                    <input type="submit" id="button_answer" value="回答" class="btn btn-primary btn-sm xx-small-sp" disabled lang="ja">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-auto ps-0 pe-1">
+                        <button id="button_start" class="btn btn-success btn-sm stopped initial xx-small-sp" lang="ja">開始</button>
+                    </div>
+                    <div class="col-auto ps-0 pe-1">
+                        <button id="button_menu" class="btn btn-secondary btn-sm xx-small-sp" lang="ja">全画面化</button>
+                    </div>
+                    <div class="col-auto px-0">
+                        <button class="dropdown_sns btn dropdown-toggle btn-sm text-white xx-small-sp" type="button" id="dropdownMenuSnsShare" data-bs-toggle="dropdown" aria-expanded="false" lang="ja">
+                            SNS共有                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuSnsShare">
+                            <li class="mb-1"><a rel="nofollow" role="button" class="button_tweet btn btn-sm text-white" onclick="openTweetWindow();"><img src="/img/system/logo_X.png" class="sns_logo"> 結果をX(Twitter)にシェア</a></li>
+                            <li class="mb-1"><a rel="nofollow" role="button" class="button_facebook btn btn-sm text-white" onclick="copyResultText('openFacebook()');"><img src="/img/system/logo_facebook.png" class="sns_logo"> 結果をコピーしてFacebookにシェア</a></li>
+                            <li class="mb-1"><a rel="nofollow" role="button" class="button_line btn btn-sm text-white" onclick="copyResultText('openLine()');"><img src="/img/system/logo_line.png" class="sns_logo"> 結果をコピーしてLINEにシェア</a></li>
+                            <li class="mb-1"><a rel="nofollow" role="button" class="button_instagram btn btn-sm text-white" onclick="copyResultText('openInstagram()');"><img src="/img/system/logo_instagram.png" class="sns_logo"> 結果をコピーしてInstagramにシェア</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ul id="pokemon_list" class="list-unstyled d-flex flex-wrap border border-secondary rounded p-0 bgcolor_white all_pokemon">
+        </ul>
+    </main>
+    <footer class="none_onfocus">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div id="audio" class="form-check form-switch text-start xx-small mb-0">
+                    <label for="checkbox_audio" class="form-check-label">効果音</label>
+                    <input id="checkbox_audio" type="checkbox" class="form-check-input" checked>
+                </div>
+                <div id="scroll" class="form-check form-switch text-start xx-small mt-0">
+                    <label for="checkbox_scroll" class="form-check-label">自動スクロール</label>
+                    <input id="checkbox_scroll" type="checkbox" class="form-check-input" checked>
+                </div>
+            </div>
+            <div id="author" class="col text-end xx-small">
+                <a href="https://twitter.com/omygTSUX" target="blank" onClick="gtag('event', 'click', {'event_category': 'author', 'event_label': 'author'});">バグ報告は作者へ：@omygTSUX</a>
+            </div>
+        </div>
+    </div>
